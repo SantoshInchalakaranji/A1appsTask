@@ -15,6 +15,7 @@ import coil.util.DebugLogger
 import com.prplmnstr.a1appstask.R
 import com.prplmnstr.a1appstask.databinding.GridItemBinding
 import com.prplmnstr.a1appstask.model.Manga
+import com.squareup.picasso.Picasso
 import dagger.hilt.android.qualifiers.ApplicationContext
 
 class MangaRvAdapter(
@@ -76,11 +77,17 @@ class MangaRvAdapter(
                 .logger(DebugLogger())
                 .build()
 
-           binding.imageView.load(manga.thumb, imageLoader){
+           binding.imageView.load(manga.thumb){
+               memoryCachePolicy(CachePolicy.ENABLED)
+               diskCachePolicy(CachePolicy.ENABLED)
                crossfade(true)
-
-
            }
+
+         //   Picasso.get().load(manga.thumb).into(binding.imageView)
+
+            binding.imageView.setOnClickListener {
+                selectListener(manga)
+            }
         }
 
 

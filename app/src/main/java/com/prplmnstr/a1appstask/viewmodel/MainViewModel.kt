@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.prplmnstr.a1appstask.data.remote.response.ApiResponse
+import com.prplmnstr.a1appstask.model.Manga
 import com.prplmnstr.a1appstask.repository.MangaRepository
 import com.prplmnstr.a1appstask.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,6 +27,8 @@ class MainViewModel @Inject constructor(
 
     //state management
     var homeFragmentState : Parcelable? = null
+
+    lateinit var detailScreenManga :Manga
 
     fun fetchManga(page: Int, nsfw: Boolean, type: String) {
         viewModelScope.launch {

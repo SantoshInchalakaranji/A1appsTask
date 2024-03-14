@@ -29,16 +29,16 @@ class MainActivity : AppCompatActivity() {
         mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
         binding.bottomNavigationView.setupWithNavController(navController)
-        binding.bottomNavigationView.visibility = View.GONE
 
-        binding.bottomNavigationView.setOnNavigationItemSelectedListener {
-            if (it.itemId == R.id.homeFragment) {
-                navController.popBackStack(R.id.homeFragment, false)
-                true
-            }
-            else
-                NavigationUI.onNavDestinationSelected(it , navController)
-        }
+
+//        binding.bottomNavigationView.setOnNavigationItemSelectedListener {
+//            if (it.itemId == R.id.home) {
+//                navController.popBackStack(R.id.home, false)
+//                true
+//            }
+//            else
+//                NavigationUI.onNavDestinationSelected(it , navController)
+//        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
@@ -65,7 +66,7 @@ class HomeFragment : Fragment() {
 
     private fun loadManga() {
 
-        mainViewModel.fetchManga(page = 1, nsfw = true, type = "all")
+        mainViewModel.fetchManga(page = 2, nsfw = true, type = "all")
 
         mainViewModel.mangaList.observe(viewLifecycleOwner, Observer { resource ->
             when (resource) {
@@ -89,13 +90,14 @@ class HomeFragment : Fragment() {
     private fun initializeRecycler() {
         binding.recycler.layoutManager = GridLayoutManager(requireContext(),3)
         mangaRvAdapter =
-            MangaRvAdapter {mangaClicked: Manga -> infoClick(mangaClicked)  }
+            MangaRvAdapter {mangaClicked: Manga -> onMangaClick(mangaClicked)  }
         binding.recycler.adapter = mangaRvAdapter
 
     }
 
-    private fun infoClick(mangaClicked: Manga) {
-
+    private fun onMangaClick(mangaClicked: Manga) {
+        mainViewModel.detailScreenManga = mangaClicked
+        findNavController().navigate(R.id.action_homeFragment2_to_detailsFragment2)
     }
 
     override fun onDestroyView() {

@@ -7,7 +7,7 @@
         android:icon="@drawable/manga"
         android:title="@string/manga" />
     <item
-        android:id="@+id/favoriteFragment"
+        android:id="@+id/favorite"
         android:icon="@drawable/favorite"
         android:title="@string/favorites" />
 </menu>

@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import androidx.room.Room
 import com.prplmnstr.a1appstask.data.local.database.AppDatabase
+import com.prplmnstr.a1appstask.data.local.database.FavoriteDao
 import com.prplmnstr.a1appstask.data.local.database.MangaDao
 import com.prplmnstr.a1appstask.data.remote.ApiKeyInterceptor
 import com.prplmnstr.a1appstask.data.remote.MangaApi
@@ -54,6 +55,12 @@ object AppModule {
     fun provideMangaDao(database: AppDatabase): MangaDao {
         return database.mangaDao()
     }
+    @Provides
+    @Singleton
+    fun provideFavoriteDao(database: AppDatabase): FavoriteDao {
+        return database.favoriteDao()
+    }
+
     @Provides
     fun provideConnectivityManager(@ApplicationContext context: Context): ConnectivityManager {
         return context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager

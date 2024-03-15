@@ -45,26 +45,10 @@ class MangaPagingAdapter(
 
          ) {
 
-//        val imageLoader = ImageLoader.Builder(context)
-//            .memoryCache {
-//                MemoryCache.Builder(context)
-//                    .maxSizePercent(0.1)
-//                    .strongReferencesEnabled(true)
-//                    .build()
-//            }
-//            .diskCache {
-//                DiskCache.Builder()
-//                    .directory(context.cacheDir)
-//                    .maxSizePercent(0.01)
-//                    .build()
-//            }
-//            .logger(DebugLogger())
-//            .build()
-
 
 
          if(manga!=null) {
-             //Picasso.get().load(manga.thumb).into(binding.imageView)
+
 
              binding.imageView.load(manga.thumb){
                memoryCachePolicy(CachePolicy.ENABLED)
@@ -75,8 +59,6 @@ class MangaPagingAdapter(
              binding.imageView.setOnClickListener {
                  selectListener(manga)
              }
-         }else{
-             Log.e("TAG", "bind: manga nulllll ", )
          }
      }
  }

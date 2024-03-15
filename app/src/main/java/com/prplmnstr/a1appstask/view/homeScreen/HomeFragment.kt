@@ -40,7 +40,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.e("TAG", "onCreateView: HomeScreen ", )
+
         activity?.findViewById<BottomNavigationView>(R.id.bottomNavigationView)?.visibility = View.VISIBLE
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
@@ -109,15 +109,5 @@ class HomeFragment : Fragment() {
         findNavController().navigate(R.id.action_homeFragment2_to_detailsFragment2)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        Log.e("TAG", "onDestroyView: HomeScreen ", )
-
-        mainViewModel.homeFragmentState = binding.recycler.layoutManager?.onSaveInstanceState()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-    }
 
 }

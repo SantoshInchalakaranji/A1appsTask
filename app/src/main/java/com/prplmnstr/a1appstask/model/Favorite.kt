@@ -2,10 +2,10 @@ package com.prplmnstr.a1appstask.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.prplmnstr.a1appstask.utils.Constants.Companion.MANGA_TABLE
+import com.prplmnstr.a1appstask.utils.Constants
 
-@Entity(tableName = MANGA_TABLE)
-data class Manga(
+@Entity(tableName = Constants.FAVORITE_TABLE)
+data class Favorite (
     @PrimaryKey(autoGenerate = false)
     val id: String,
     val authors: String,
@@ -21,8 +21,8 @@ data class Manga(
     val type: String,
     val updateAt: Long
 )
-fun Manga.toFavorite(): Favorite {
-    return Favorite(
+fun Favorite.toManga(): Manga {
+    return Manga(
         id = id,
         authors = authors,
         createAt = createAt,
@@ -38,3 +38,5 @@ fun Manga.toFavorite(): Favorite {
         updateAt = updateAt
     )
 }
+
+

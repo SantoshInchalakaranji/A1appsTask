@@ -2,4 +2,10 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="transparent">#00ffffff</color>
+    <color name="primary_light">#FF6750A4</color>
+    <color name="primary_dark">#FFD0BCFF</color>
+
+    <color name="orange">#F9834B</color>
+    <color name="card_selection_color">#10F9834B</color>
 </resources>

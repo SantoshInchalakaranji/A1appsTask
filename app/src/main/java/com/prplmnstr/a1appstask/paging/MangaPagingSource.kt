@@ -33,8 +33,6 @@ class MangaPagingSource  (
 
                 val response =
                     mangaApi.fetchManga(position).toMangaList()
-
-            //val response = mangaApi.fetchManga(position)
             LoadResult.Page(
                 data =  response,
                 prevKey = if(position ==1 ) null else position-1,

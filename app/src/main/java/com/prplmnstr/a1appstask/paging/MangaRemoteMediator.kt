@@ -30,12 +30,10 @@ class MangaRemoteMediator(
            val currentPage = when (loadType) {
                LoadType.REFRESH -> {
                    val remoteKeys = getRemoteKeyClosestToCurrentPosition(state)
-                   Log.e("TAG", "load: REFRESH item ${remoteKeys}", )
                    remoteKeys?.nextPage?.minus(1) ?: 1
                }
                LoadType.PREPEND -> {
                    val remoteKeys = getRemoteKeyForFirstItem(state)
-                   Log.e("TAG", "load: PREPEND item ${remoteKeys}", )
                    val prevPage = remoteKeys?.prevPage
                        ?: return MediatorResult.Success(
                            endOfPaginationReached = remoteKeys != null
@@ -44,7 +42,6 @@ class MangaRemoteMediator(
                }
                LoadType.APPEND -> {
                    val remoteKeys = getRemoteKeyForLastItem(state)
-                   Log.e("TAG", "load: last item ${remoteKeys}", )
                    val nextPage = remoteKeys?.nextPage
                        ?: return MediatorResult.Success(
                            endOfPaginationReached = remoteKeys != null
@@ -55,8 +52,7 @@ class MangaRemoteMediator(
 
 
            val response = mangaApi.fetchManga(currentPage)
-           val endOfPaginationReached = response.data.isEmpty()
-
+           val endOfPaginationReached = MAX_PAGE_SIZE == currentPage
            val prevPage = if(currentPage == 1) null else currentPage -1
            val nextPage = if(endOfPaginationReached) null else currentPage + 1
 

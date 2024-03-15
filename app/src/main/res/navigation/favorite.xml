@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/favorite"
+    app:startDestination="@id/favoriteFragment2">
+
+    <fragment
+        android:id="@+id/favoriteFragment2"
+        android:name="com.prplmnstr.a1appstask.view.favoriteScreen.FavoriteFragment"
+        android:label="FavoriteFragment" >
+        <action
+            android:id="@+id/action_favoriteFragment2_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="com.prplmnstr.a1appstask.view.detailScreen.DetailsFragment"
+        android:label="DetailsFragment" />
+</navigation>

@@ -5,21 +5,6 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/home">
 
-    <fragment
-        android:id="@+id/splashFragment"
-        android:name="com.prplmnstr.a1appstask.view.splashScreen.SplashFragment"
-        android:label="fragment_splash"
-        tools:layout="@layout/fragment_splash" >
-        <action
-            android:id="@+id/action_splashFragment_to_home"
-            app:destination="@id/home"
-            app:popUpTo="@id/splashFragment"
-            app:popUpToInclusive="true" />
-    </fragment>
-    <fragment
-        android:id="@+id/favoriteFragment"
-        android:name="com.prplmnstr.a1appstask.view.favoriteScreen.FavoriteFragment"
-        android:label="fragment_favorite"
-        tools:layout="@layout/fragment_favorite" />
     <include app:graph="@navigation/home" />
+    <include app:graph="@navigation/favorite" />
 </navigation>

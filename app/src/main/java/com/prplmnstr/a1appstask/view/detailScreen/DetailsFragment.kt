@@ -6,11 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import coil.load
 import com.prplmnstr.a1appstask.R
 import com.prplmnstr.a1appstask.databinding.FragmentDetailsBinding
 import com.prplmnstr.a1appstask.databinding.FragmentHomeBinding
+import com.prplmnstr.a1appstask.model.toFavorite
 import com.prplmnstr.a1appstask.viewmodel.MainViewModel
 import kotlin.math.round
 
@@ -37,13 +39,24 @@ class DetailsFragment : Fragment() {
 
         }
 
+        binding.favoriteButton.isChecked = mainViewModel.isInFavorite()
+
         binding.favoriteButton.setOnClickListener {
+            if(binding.favoriteButton.isChecked){
+                Toast.makeText(requireContext(), "Added to favorite", Toast.LENGTH_SHORT).show()
+                mainViewModel.addFavorite(mainViewModel.detailScreenManga.toFavorite())
+
+            }else{
+                Toast.makeText(requireContext(), "Removed from favorite", Toast.LENGTH_SHORT).show()
+                mainViewModel.deleteFavorite(mainViewModel.detailScreenManga.toFavorite())
+            }
             binding.favoriteButton.startAnimation(
             AnimationUtils.loadAnimation(
                 context,
                 R.anim.popup_animation
             )
         )
+
         }
     }
 

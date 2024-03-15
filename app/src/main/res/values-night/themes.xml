@@ -3,5 +3,17 @@
     <style name="Base.Theme.A1appsTask" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+
+        <item name="windowActionModeOverlay">true</item>
+        <item name="android:statusBarColor">?attr/colorPrimary</item>
+        <item name="actionModeStyle">@style/action_mode_style</item>
     </style>
+
+    <style name="action_mode_style" parent="@style/Widget.Material3.ActionMode">
+        <item name="background">@color/orange</item>
+        <item name="titleTextStyle">@style/ActionModeTitleTextStyle</item>
+
+    </style>
+
+
 </resources>

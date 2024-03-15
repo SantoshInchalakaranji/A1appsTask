@@ -32,7 +32,6 @@ object AppModule {
     }
 
 
-
     @Provides
     @Singleton
     fun provideMangaApi(okHttpClient: OkHttpClient): MangaApi {
@@ -43,6 +42,7 @@ object AppModule {
             .build()
             .create(MangaApi::class.java)
     }
+
     @Provides
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): AppDatabase {
@@ -55,6 +55,7 @@ object AppModule {
     fun provideMangaDao(database: AppDatabase): MangaDao {
         return database.mangaDao()
     }
+
     @Provides
     @Singleton
     fun provideFavoriteDao(database: AppDatabase): FavoriteDao {

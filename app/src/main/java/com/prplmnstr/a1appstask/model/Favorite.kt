@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import com.prplmnstr.a1appstask.utils.Constants
 
 @Entity(tableName = Constants.FAVORITE_TABLE)
-data class Favorite (
+data class Favorite(
     @PrimaryKey(autoGenerate = false)
     val id: String,
     val authors: String,
@@ -21,6 +21,7 @@ data class Favorite (
     val type: String,
     val updateAt: Long
 )
+
 fun Favorite.toManga(): Manga {
     return Manga(
         id = id,

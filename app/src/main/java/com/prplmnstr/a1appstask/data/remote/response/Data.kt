@@ -4,7 +4,6 @@ package com.prplmnstr.a1appstask.data.remote.response
 import com.google.gson.annotations.SerializedName
 
 
-
 data class Data(
     @SerializedName("authors")
     val authors: List<String>,

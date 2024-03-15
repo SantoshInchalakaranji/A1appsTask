@@ -7,7 +7,7 @@ import com.prplmnstr.a1appstask.model.Manga
 import com.prplmnstr.a1appstask.model.MangaRemoteKeys
 
 @Database(
-    entities = [Manga::class,MangaRemoteKeys::class,Favorite::class],
+    entities = [Manga::class, MangaRemoteKeys::class, Favorite::class],
     version = 1,
     exportSchema = false
 )

@@ -11,76 +11,76 @@ import com.prplmnstr.a1appstask.data.remote.MangaApi
 import com.prplmnstr.a1appstask.data.remote.response.toMangaList
 import com.prplmnstr.a1appstask.model.Manga
 import com.prplmnstr.a1appstask.model.MangaRemoteKeys
-import com.prplmnstr.a1appstask.utils.Constants
 import com.prplmnstr.a1appstask.utils.Constants.Companion.MAX_PAGE_SIZE
 
 @OptIn(ExperimentalPagingApi::class)
 class MangaRemoteMediator(
-    private val mangaApi : MangaApi,
+    private val mangaApi: MangaApi,
     private val appDatabase: AppDatabase
-):RemoteMediator<Int, Manga>() {
+) : RemoteMediator<Int, Manga>() {
 
     val mangaDao = appDatabase.mangaDao()
-    val remoteKeyDao =appDatabase.mangaRemoteKeysDao()
+    val remoteKeyDao = appDatabase.mangaRemoteKeysDao()
 
 
     override suspend fun load(loadType: LoadType, state: PagingState<Int, Manga>): MediatorResult {
-      return try {
+        return try {
 
-           val currentPage = when (loadType) {
-               LoadType.REFRESH -> {
-                   val remoteKeys = getRemoteKeyClosestToCurrentPosition(state)
-                   remoteKeys?.nextPage?.minus(1) ?: 1
-               }
-               LoadType.PREPEND -> {
-                   val remoteKeys = getRemoteKeyForFirstItem(state)
-                   val prevPage = remoteKeys?.prevPage
-                       ?: return MediatorResult.Success(
-                           endOfPaginationReached = remoteKeys != null
-                       )
-                   prevPage
-               }
-               LoadType.APPEND -> {
-                   val remoteKeys = getRemoteKeyForLastItem(state)
-                   val nextPage = remoteKeys?.nextPage
-                       ?: return MediatorResult.Success(
-                           endOfPaginationReached = remoteKeys != null
-                       )
-                   nextPage
-               }
-           }
+            val currentPage = when (loadType) {
+                LoadType.REFRESH -> {
+                    val remoteKeys = getRemoteKeyClosestToCurrentPosition(state)
+                    remoteKeys?.nextPage?.minus(1) ?: 1
+                }
+
+                LoadType.PREPEND -> {
+                    val remoteKeys = getRemoteKeyForFirstItem(state)
+                    val prevPage = remoteKeys?.prevPage
+                        ?: return MediatorResult.Success(
+                            endOfPaginationReached = remoteKeys != null
+                        )
+                    prevPage
+                }
+
+                LoadType.APPEND -> {
+                    val remoteKeys = getRemoteKeyForLastItem(state)
+                    val nextPage = remoteKeys?.nextPage
+                        ?: return MediatorResult.Success(
+                            endOfPaginationReached = remoteKeys != null
+                        )
+                    nextPage
+                }
+            }
 
 
-           val response = mangaApi.fetchManga(currentPage)
-           val endOfPaginationReached = MAX_PAGE_SIZE == currentPage
-           val prevPage = if(currentPage == 1) null else currentPage -1
-           val nextPage = if(endOfPaginationReached) null else currentPage + 1
+            val response = mangaApi.fetchManga(currentPage)
+            val endOfPaginationReached = MAX_PAGE_SIZE == currentPage
+            val prevPage = if (currentPage == 1) null else currentPage - 1
+            val nextPage = if (endOfPaginationReached) null else currentPage + 1
 
-           appDatabase.withTransaction {
+            appDatabase.withTransaction {
 
-               if (loadType == LoadType.REFRESH) {
-                   mangaDao.deleteAllManga()
-                   remoteKeyDao.deleteAllRemoteKeys()
-               }
+                if (loadType == LoadType.REFRESH) {
+                    mangaDao.deleteAllManga()
+                    remoteKeyDao.deleteAllRemoteKeys()
+                }
 
-               mangaDao.insertAllManga(response.toMangaList())
-               val keys = response.toMangaList().map { manga ->
-                   MangaRemoteKeys(
-                       id = manga.id,
-                       prevPage = prevPage,
-                       nextPage = nextPage
-                   )
-               }
-               remoteKeyDao.insertAllRemoteKeys(keys)
-           }
-           MediatorResult.Success(endOfPaginationReached)
-       }
-       catch (e: Exception){
-           Log.e("TAG", "${e.message}", )
-           MediatorResult.Error(e)
-       }
+                mangaDao.insertAllManga(response.toMangaList())
+                val keys = response.toMangaList().map { manga ->
+                    MangaRemoteKeys(
+                        id = manga.id,
+                        prevPage = prevPage,
+                        nextPage = nextPage
+                    )
+                }
+                remoteKeyDao.insertAllRemoteKeys(keys)
+            }
+            MediatorResult.Success(endOfPaginationReached)
+        } catch (e: Exception) {
+            Log.e("TAG", "${e.message}")
+            MediatorResult.Error(e)
+        }
 
-}
+    }
 
     private suspend fun getRemoteKeyClosestToCurrentPosition(
         state: PagingState<Int, Manga>

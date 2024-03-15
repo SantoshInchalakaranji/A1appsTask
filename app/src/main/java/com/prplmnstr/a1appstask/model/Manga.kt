@@ -21,6 +21,7 @@ data class Manga(
     val type: String,
     val updateAt: Long
 )
+
 fun Manga.toFavorite(): Favorite {
     return Favorite(
         id = id,

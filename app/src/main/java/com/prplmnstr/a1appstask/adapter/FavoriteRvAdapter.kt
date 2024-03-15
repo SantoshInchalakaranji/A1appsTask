@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.Configuration
 import android.os.Handler
 import android.os.Looper
-import android.util.TypedValue
 import android.view.ActionMode
 import android.view.LayoutInflater
 import android.view.Menu
@@ -17,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.request.CachePolicy
 import com.prplmnstr.a1appstask.R
-
 import com.prplmnstr.a1appstask.databinding.FavoriteItemBinding
 import com.prplmnstr.a1appstask.model.Favorite
 
@@ -29,8 +27,7 @@ class FavoriteRvAdapter(
     private val clickListener: (Favorite) -> Unit,
 
 
-) : RecyclerView.Adapter<FavoriteRvAdapter.ViewHolder>(), ActionMode.Callback {
-
+    ) : RecyclerView.Adapter<FavoriteRvAdapter.ViewHolder>(), ActionMode.Callback {
 
 
     private var multiSelection = false
@@ -59,7 +56,8 @@ class FavoriteRvAdapter(
         holder.bind(
             mangas[position],
 
-        )
+            )
+
 
         /**  Long click listener for initiating multi-selection mode **/
         holder.binding.parentCard.setOnLongClickListener {
@@ -79,9 +77,15 @@ class FavoriteRvAdapter(
         holder.binding.parentCard.setOnClickListener {
             if (multiSelection) {
                 applySelection(holder, mangas[position])
-            }else{
+            } else {
                 clickListener(mangas[position])
             }
+        }
+    }
+
+    fun closeActionMode() {
+        if (::mActionMode.isInitialized) {
+            mActionMode.finish()
         }
     }
 
@@ -99,7 +103,7 @@ class FavoriteRvAdapter(
             favoriteItem: Favorite,
         ) {
 
-            binding.imageView.load(favoriteItem.thumb){
+            binding.imageView.load(favoriteItem.thumb) {
                 memoryCachePolicy(CachePolicy.ENABLED)
                 diskCachePolicy(CachePolicy.ENABLED)
                 crossfade(true)
@@ -112,18 +116,17 @@ class FavoriteRvAdapter(
         }
 
 
-
     }
 
     private fun applySelection(holder: ViewHolder, favoriteItem: Favorite) {
         if (selectedManga.contains(favoriteItem)) {
-            selectedManga.remove(favoriteItem)
-            if(isDarkTheme(requireActivity)) {
-                changeItemStyle(holder, R.color.white, R.color.white)
-            }else{
-                changeItemStyle(holder, R.color.black, R.color.black)
-            }
 
+            if (isDarkTheme(requireActivity)) {
+                changeItemStyle(holder, R.color.black, R.color.white)
+            } else {
+                changeItemStyle(holder, R.color.white, R.color.black)
+            }
+            selectedManga.remove(favoriteItem)
         } else {
             selectedManga.add(favoriteItem)
             changeItemStyle(holder, R.color.card_selection_color, R.color.orange)
@@ -193,13 +196,17 @@ class FavoriteRvAdapter(
         multiSelection = false
         selectedManga.clear()
         myViewHolders.forEach { holder ->
-            changeItemStyle(holder, R.color.white, R.color.transparent)
+            if (isDarkTheme(requireActivity)) {
+                changeItemStyle(holder, R.color.black, R.color.white)
+            } else {
+                changeItemStyle(holder, R.color.white, R.color.black)
+            }
 
         }
 
-        if(isDarkTheme(requireActivity)){
+        if (isDarkTheme(requireActivity)) {
             addColorToStatusBar(R.color.primary_dark)
-        }else{
+        } else {
             addColorToStatusBar(R.color.primary_light)
         }
 
@@ -210,4 +217,6 @@ class FavoriteRvAdapter(
         val mode = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         return mode == Configuration.UI_MODE_NIGHT_YES
     }
+
+
 }

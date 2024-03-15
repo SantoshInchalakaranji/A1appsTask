@@ -2,10 +2,11 @@ package com.prplmnstr.a1appstask.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.prplmnstr.a1appstask.utils.Constants.Companion.MANGA_TABLE
 
-@Entity(tableName = "manga_table")
+@Entity(tableName = MANGA_TABLE)
 data class Manga(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = false)
     val id: String,
     val authors: String,
     val createAt: Long,

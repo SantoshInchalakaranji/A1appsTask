@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingSource
+import androidx.paging.cachedIn
 import com.prplmnstr.a1appstask.data.remote.response.ApiResponse
 import com.prplmnstr.a1appstask.model.Manga
 import com.prplmnstr.a1appstask.repository.MangaRepository
@@ -21,23 +23,13 @@ class MainViewModel @Inject constructor(
     private val repository: MangaRepository
 ): ViewModel(){
 
-
-    private val _mangaList = MutableLiveData<Resource<ApiResponse>>()
-    val mangaList: LiveData<Resource<ApiResponse>> = _mangaList
-
     //state management
     var homeFragmentState : Parcelable? = null
-
     lateinit var detailScreenManga :Manga
 
-    fun fetchManga(page: Int, nsfw: Boolean, type: String) {
-        viewModelScope.launch {
-            try {
-                val response = repository.fetchManga(page, nsfw, type)
-                _mangaList.value = response
-            } catch (e: Exception) {
-                _mangaList.value = Resource.Error("Error occurred: ${e.message}")
-            }
-        }
-    }
+
+    //remote data
+    val mangaList = repository.getManga().cachedIn(viewModelScope)
+
+
 }

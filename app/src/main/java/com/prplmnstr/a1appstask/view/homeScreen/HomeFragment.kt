@@ -1,5 +1,7 @@
 package com.prplmnstr.a1appstask.view.homeScreen
 
+import android.app.Dialog
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -13,11 +15,14 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.snackbar.Snackbar
 import com.prplmnstr.a1appstask.R
-import com.prplmnstr.a1appstask.adapter.MangaRvAdapter
+
 import com.prplmnstr.a1appstask.data.remote.response.toMangaList
 import com.prplmnstr.a1appstask.databinding.FragmentHomeBinding
 import com.prplmnstr.a1appstask.model.Manga
+import com.prplmnstr.a1appstask.paging.LoaderAdapter
+import com.prplmnstr.a1appstask.paging.MangaPagingAdapter
 import com.prplmnstr.a1appstask.utils.Resource
 import com.prplmnstr.a1appstask.viewmodel.MainViewModel
 
@@ -25,13 +30,11 @@ class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
     private val mainViewModel: MainViewModel by activityViewModels()
-    private lateinit var mangaRvAdapter: MangaRvAdapter
+    private lateinit var mangaRvAdapter: MangaPagingAdapter
+
+    lateinit var loadingDialog: Dialog
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,52 +49,58 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initializeRecycler()
-        loadManga()
-
-//        if(mainViewModel.homeFragmentState!=null){
-//            binding.recycler.layoutManager?.onRestoreInstanceState(mainViewModel.homeFragmentState)
-//        }
 
 
-
-
-
-
-
-
+            initializeRecycler()
+            loadManga()
 
 
     }
 
     private fun loadManga() {
 
-        mainViewModel.fetchManga(page = 2, nsfw = true, type = "all")
-
-        mainViewModel.mangaList.observe(viewLifecycleOwner, Observer { resource ->
-            when (resource) {
-                is Resource.Loading -> {
-
-                }
-                is Resource.Success -> {
-                    val mangaList = resource.data!!.toMangaList()
-                    mangaRvAdapter.setList(mangaList,requireContext().applicationContext)
-                }
-                is Resource.Error -> {
-
-                    val errorMessage = resource.message
-
-                }
-            }
+        mainViewModel.mangaList.observe(viewLifecycleOwner, Observer {
+            mangaRvAdapter.submitData(lifecycle, it)
         })
 
+
+    }
+
+    private fun showLoadingDialog() {
+        val progressDialog = ProgressDialog(requireContext())
+        progressDialog.setTitle("Loading...")
+        progressDialog.setMessage("Please wait...")
+        progressDialog.setCancelable(false) // Optional: prevent user from dismissing by tapping outside
+        progressDialog.show()
+    }
+
+
+
+    private fun AskToLoadLocalData(errorMessage:String?) {
+
+        val snackbar = Snackbar.make(
+            requireView(),
+            errorMessage ?: "An error occurred",
+            Snackbar.LENGTH_INDEFINITE
+        ).apply {
+            setAction("Load local data") {
+
+                dismiss()
+            }
+
+        }
+
+        snackbar.show()
     }
 
     private fun initializeRecycler() {
         binding.recycler.layoutManager = GridLayoutManager(requireContext(),3)
+        binding.recycler.setHasFixedSize(true)
         mangaRvAdapter =
-            MangaRvAdapter {mangaClicked: Manga -> onMangaClick(mangaClicked)  }
-        binding.recycler.adapter = mangaRvAdapter
+            MangaPagingAdapter {mangaClicked: Manga -> onMangaClick(mangaClicked)  }
+        binding.recycler.adapter = mangaRvAdapter.withLoadStateFooter(
+            footer = LoaderAdapter()
+        )
 
     }
 
@@ -103,7 +112,12 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         Log.e("TAG", "onDestroyView: HomeScreen ", )
+
         mainViewModel.homeFragmentState = binding.recycler.layoutManager?.onSaveInstanceState()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
     }
 
 }
